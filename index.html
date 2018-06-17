@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<body style="margin:0px">
+
+<canvas id="game" width="100%" height="100%" style="border:0px solid #000000;">
+Your browser does not support the HTML5 canvas tag.
+</canvas>
+
+<script>
+var scl = 1;
+var game = [];
+var push_stat_x = [];
+var push_stat_y = [];
+var size = 3;
+setup();
+function setup(){
+  var i;
+  var cnt = 0;
+  for (i=0; i<size; i++){
+    push_stat_x.push(false);
+    push_stat_y.push(false);
+  }
+  for (i = 0; i < (size+1); i++){
+    for (j = 0; j < (size+1); j++){
+      if(i < size && j < size){
+        game.push(cnt);
+        cnt = cnt + 1;
+      }else{
+        game.push(-1);
+      }
+    }
+  }
+  console.log(game);
+  var c = document.getElementById("game");
+  window.addEventListener('keydown', keyDownEvent, false);
+  window.addEventListener('keyup', keyUpEvent, false);
+  window.addEventListener('resize', resizeCanvas, false);
+  setInterval(function() {
+      update();
+      draw();
+      }, 30);
+  resizeCanvas();
+}
+
+function shift_y(idx){
+  if(push_stat_y[idx]){
+    return;
+  }
+  push_stat_y[idx] = true;
+  var tmp = game[3 + (size+1)*idx];
+  game[3 + (size+1)*idx] = game[2 + (size+1)*idx];
+  game[2 + (size+1)*idx] = game[1 + (size+1)*idx];
+  game[1 + (size+1)*idx] = game[0 + (size+1)*idx];
+  game[0 + (size+1)*idx] = tmp;
+}
+
+function unshift_y(idx){
+  if(!push_stat_y[idx]){
+    return;
+  }
+  push_stat_y[idx] = false;
+  var tmp = game[(size+1)*idx];
+  game[0 + (size+1)*idx] = game[1 + (size+1)*idx];
+  game[1 + (size+1)*idx] = game[2 + (size+1)*idx];
+  game[2 + (size+1)*idx] = game[3 + (size+1)*idx];
+  game[3 + (size+1)*idx] = tmp;
+}
+
+function unshift_x(idx){
+  if(!push_stat_x[idx]){
+    return;
+  }
+  push_stat_x[idx] = false;
+  var tmp = game[idx + (size+1)*0];
+  game[idx + (size+1)*0] = game[idx + (size+1)*1];
+  game[idx + (size+1)*1] = game[idx + (size+1)*2];
+  game[idx + (size+1)*2] = game[idx + (size+1)*3];
+  game[idx + (size+1)*3] = tmp;
+}
+
+function shift_x(idx){
+  if(push_stat_x[idx]){
+    return;
+  }
+  push_stat_x[idx] = true;
+  var tmp = game[idx + (size+1)*3];
+  game[idx + (size+1)*3] = game[idx + (size+1)*2];
+  game[idx + (size+1)*2] = game[idx + (size+1)*1];
+  game[idx + (size+1)*1] = game[idx + (size+1)*0];
+  game[idx + (size+1)*0] = tmp;
+}
+
+function keyDownEvent(e){
+  switch(e.keyCode){
+    case 51:
+      shift_x(0);
+      break;
+    case 69:
+      shift_x(1);
+      break;
+    case 68:
+      shift_x(2);
+      break;
+    case 86:
+      shift_y(0);
+      break;
+    case 66:
+      shift_y(1);
+      break;
+    case 78:
+      shift_y(2);
+      break;
+  }
+}
+
+function keyUpEvent(e){
+  switch(e.keyCode){
+    case 51:
+      unshift_x(0);
+      break;
+    case 69:
+      unshift_x(1);
+      break;
+    case 68:
+      unshift_x(2);
+      break;
+    case 86:
+      unshift_y(0);
+      break;
+    case 66:
+      unshift_y(1);
+      break;
+    case 78:
+      unshift_y(2);
+      break;
+  }
+
+}
+
+function update(){
+
+}
+
+function draw(){
+  var c = document.getElementById("game");
+  var ctx = c.getContext("2d");
+  ctx.clearRect(0,0,c.width,c.height);
+  ctx.fillStyle = "#000";
+  ctx.fillRect(0,0,c.width,c.height);
+  ctx.strokeStyle = '#FFF';
+  var i;
+  for (i = 0; i < size + 1; i++){
+    for (j = 0; j < size + 1; j++){
+      ctx.beginPath();
+      ctx.arc(40*i + 40,40*j + 40,20,0,2*Math.PI);
+      if (game[i*(size+1)+j] >= 0){
+        ctx.font = "30px Arial";
+        ctx.fillStyle = "#FFF";
+        ctx.fillText(game[i*(size+1)+j],40 * i + 32, 40 * j + 48); 
+        ctx.stroke();
+      }
+    }
+  }
+}
+
+function resizeCanvas(){
+  var game = document.getElementById("game");
+  min_len = Math.min(window.innerWidth,window.innerHeight);
+  game.width = min_len;
+  game.height = min_len;
+  game.style.width = min_len + 'px';
+  game.style.height = min_len + 'px';
+  scl = min_len / 1024.0;
+  draw();
+}
+
+</script> 
+
+</body>
+</html>
