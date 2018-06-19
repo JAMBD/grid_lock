@@ -1,11 +1,26 @@
 <!DOCTYPE html>
 <html>
+<head>
+
+<style>
+td {
+  border: 10px solid #FFF;
+  text-align:center;
+  background-color:#F88;
+}
+</style>
+</head>
 <body style="margin:0px">
-
-<canvas id="game" width="100%" height="100%" style="border:0px solid #000000;">
-Your browser does not support the HTML5 canvas tag.
-</canvas>
-
+<table id="game" width="100%" height="100%" style="width:100%; height:100%">
+  <tr>
+    <td>0</td>
+    <td>1</td>
+  </tr>
+  <tr>
+    <td>0</td>
+    <td>1</td>
+  </tr>
+</table>
 <script>
 var scl = 1;
 var game = [];
@@ -31,13 +46,13 @@ function setup(){
     }
   }
   console.log(game);
-  var c = document.getElementById("game");
+  var t = document.getElementById("game");
+
   window.addEventListener('keydown', keyDownEvent, false);
   window.addEventListener('keyup', keyUpEvent, false);
   window.addEventListener('resize', resizeCanvas, false);
   setInterval(function() {
       update();
-      draw();
       }, 30);
   resizeCanvas();
 }
@@ -164,14 +179,14 @@ function draw(){
 }
 
 function resizeCanvas(){
-  var game = document.getElementById("game");
+  var sreen = document.getElementById("game");
   min_len = Math.min(window.innerWidth,window.innerHeight);
-  game.width = min_len;
-  game.height = min_len;
-  game.style.width = min_len + 'px';
-  game.style.height = min_len + 'px';
+  sreen.width = min_len;
+  sreen.height = min_len;
+  sreen.style.width = min_len + 'px';
+  sreen.style.height = min_len + 'px';
   scl = min_len / 1024.0;
-  draw();
+  //draw();
 }
 
 </script> 
