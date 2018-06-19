@@ -3,23 +3,20 @@
 <head>
 
 <style>
+table {
+  table-layout: fixed;
+}
 td {
-  border: 10px solid #FFF;
+  border: 10px solid  #FFF;
   text-align:center;
+  padding: 0;
   background-color:#F88;
+  font-size: 10vw;
 }
 </style>
 </head>
 <body style="margin:0px">
 <table id="game" width="100%" height="100%" style="width:100%; height:100%">
-  <tr>
-    <td>0</td>
-    <td>1</td>
-  </tr>
-  <tr>
-    <td>0</td>
-    <td>1</td>
-  </tr>
 </table>
 <script>
 var scl = 1;
@@ -47,6 +44,14 @@ function setup(){
   }
   console.log(game);
   var t = document.getElementById("game");
+  for (i=0;i<size+2;i++){
+    var row = t.insertRow(i);
+    for (j=0;j<size+2;j++){
+      var cell = row.insertCell(j);
+      cell.style.width = (100/(size+2)).toString() + "%";
+      cell.style.height = (100/(size+2)).toString() + "%";
+    }
+  }
 
   window.addEventListener('keydown', keyDownEvent, false);
   window.addEventListener('keyup', keyUpEvent, false);
@@ -153,26 +158,21 @@ function keyUpEvent(e){
 }
 
 function update(){
-
-}
-
-function draw(){
-  var c = document.getElementById("game");
-  var ctx = c.getContext("2d");
-  ctx.clearRect(0,0,c.width,c.height);
-  ctx.fillStyle = "#000";
-  ctx.fillRect(0,0,c.width,c.height);
-  ctx.strokeStyle = '#FFF';
-  var i;
-  for (i = 0; i < size + 1; i++){
-    for (j = 0; j < size + 1; j++){
-      ctx.beginPath();
-      ctx.arc(40*i + 40,40*j + 40,20,0,2*Math.PI);
-      if (game[i*(size+1)+j] >= 0){
-        ctx.font = "30px Arial";
-        ctx.fillStyle = "#FFF";
-        ctx.fillText(game[i*(size+1)+j],40 * i + 32, 40 * j + 48); 
-        ctx.stroke();
+  var t = document.getElementById("game");
+  for (i = 0; i < size + 2; i++){
+    for (j = 0; j < size + 2; j++){
+      if (i > 0 && j > 0){
+        var num = game[(i-1) * (size+1) + (j-1)];
+        if (num >= 0){
+          t.rows[i].cells[j].innerHTML = num.toString();
+          t.rows[i].cells[j].style.backgroundColor = "#88F";
+        }else{
+          t.rows[i].cells[j].innerHTML = "";
+          t.rows[i].cells[j].style.backgroundColor = "#FFF";
+        }
+      }else{
+        t.rows[i].cells[j].innerHTML = "";
+        t.rows[i].cells[j].style.backgroundColor = "#FFF";
       }
     }
   }
