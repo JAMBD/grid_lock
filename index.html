@@ -10,7 +10,7 @@ td {
   border: 10px solid  #FFF;
   text-align:center;
   padding: 0;
-  background-color:#F88;
+  background-color:#FFF;
   font-size: 10vw;
 }
 </style>
@@ -50,6 +50,15 @@ function setup(){
       var cell = row.insertCell(j);
       cell.style.width = (100/(size+2)).toString() + "%";
       cell.style.height = (100/(size+2)).toString() + "%";
+      if (i == 0 && j > 0 && j < size + 1){
+        var checkbox = document.createElement('input');
+        checkbox.type = "checkbox";
+        checkbox.name = "name" + i.toString();
+        checkbox.id = "id" + i.toString();
+        checkbox.style.width = "100%";
+        checkbox.style.height = "100%";
+        cell.appendChild(checkbox);
+      }
     }
   }
 
