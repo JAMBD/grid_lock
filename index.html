@@ -53,17 +53,44 @@ function setup(){
       if (i == 0 && j > 0 && j < size + 1){
         var checkbox = document.createElement('input');
         checkbox.type = "checkbox";
-        checkbox.name = "name" + i.toString();
-        checkbox.id = "id" + i.toString();
+        checkbox.name = "col" + (j-1).toString();
+        checkbox.id = "col" + (j-1).toString();
+        checkbox.value = (j-1).toString();
         checkbox.style.width = "100%";
         checkbox.style.height = "100%";
+        checkbox.onclick = function(){
+          var num = parseInt(this.value);
+          if (this.checked){
+            shift_x(num);
+          }else{
+            unshift_x(num);
+          }
+          };
         cell.appendChild(checkbox);
+        cell.style.backgroundColor = "#FFF";
+      }
+      if (j == 0 && i > 0 && i < size + 1){
+        var checkbox = document.createElement('input');
+        checkbox.type = "checkbox";
+        checkbox.name = "row" + (i-1).toString();
+        checkbox.id = "row" + (i-1).toString();
+        checkbox.value = (i-1).toString();
+        checkbox.style.width = "100%";
+        checkbox.style.height = "100%";
+        checkbox.onclick = function(){
+          var num = parseInt(this.value);
+          if (this.checked){
+            shift_y(num);
+          }else{
+            unshift_y(num);
+          }
+          };
+        cell.appendChild(checkbox);
+        cell.style.backgroundColor = "#FFF";
       }
     }
   }
 
-  window.addEventListener('keydown', keyDownEvent, false);
-  window.addEventListener('keyup', keyUpEvent, false);
   window.addEventListener('resize', resizeCanvas, false);
   setInterval(function() {
       update();
@@ -118,54 +145,7 @@ function shift_x(idx){
   game[idx + (size+1)*1] = game[idx + (size+1)*0];
   game[idx + (size+1)*0] = tmp;
 }
-
-function keyDownEvent(e){
-  switch(e.keyCode){
-    case 51:
-      shift_x(0);
-      break;
-    case 69:
-      shift_x(1);
-      break;
-    case 68:
-      shift_x(2);
-      break;
-    case 86:
-      shift_y(0);
-      break;
-    case 66:
-      shift_y(1);
-      break;
-    case 78:
-      shift_y(2);
-      break;
-  }
-}
-
-function keyUpEvent(e){
-  switch(e.keyCode){
-    case 51:
-      unshift_x(0);
-      break;
-    case 69:
-      unshift_x(1);
-      break;
-    case 68:
-      unshift_x(2);
-      break;
-    case 86:
-      unshift_y(0);
-      break;
-    case 66:
-      unshift_y(1);
-      break;
-    case 78:
-      unshift_y(2);
-      break;
-  }
-
-}
-
+0
 function update(){
   var t = document.getElementById("game");
   for (i = 0; i < size + 2; i++){
@@ -180,8 +160,8 @@ function update(){
           t.rows[i].cells[j].style.backgroundColor = "#FFF";
         }
       }else{
-        t.rows[i].cells[j].innerHTML = "";
-        t.rows[i].cells[j].style.backgroundColor = "#FFF";
+        //t.rows[i].cells[j].innerHTML = "";
+        //t.rows[i].cells[j].style.backgroundColor = "#FFF";
       }
     }
   }
