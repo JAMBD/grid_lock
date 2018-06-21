@@ -23,7 +23,7 @@ var scl = 1;
 var game = [];
 var push_stat_x = [];
 var push_stat_y = [];
-var size = 3;
+var size = 2;
 setup();
 function setup(){
   var i;
@@ -34,7 +34,7 @@ function setup(){
   }
   for (i = 0; i < (size+1); i++){
     for (j = 0; j < (size+1); j++){
-      if(i < size && j < size){
+      if(i > 0 && j < size){
         game.push(cnt);
         cnt = cnt + 1;
       }else{
@@ -50,7 +50,7 @@ function setup(){
       var cell = row.insertCell(j);
       cell.style.width = (100/(size+2)).toString() + "%";
       cell.style.height = (100/(size+2)).toString() + "%";
-      if (i == 0 && j > 0 && j < size + 1){
+      if (i == size+1 && j > 0 && j < size + 1){
         var checkbox = document.createElement('input');
         checkbox.type = "checkbox";
         checkbox.name = "col" + (j-1).toString();
@@ -65,7 +65,7 @@ function setup(){
           }else{
             unshift_x(num);
           }
-          var sc =document.getElementById("row0");
+          var sc =document.getElementById("row" + (size-1).toString());
           var all = false;
           for (var k in push_stat_x){
             all |= push_stat_x[k];
@@ -80,7 +80,7 @@ function setup(){
         checkbox.type = "checkbox";
         checkbox.name = "row" + (i-1).toString();
         checkbox.id = "row" + (i-1).toString();
-        checkbox.value = (i-1).toString();
+        checkbox.value = (i).toString();
         checkbox.style.width = "100%";
         checkbox.style.height = "100%";
         checkbox.onclick = function(){
@@ -115,10 +115,10 @@ function shift_y(idx){
     return;
   }
   push_stat_y[idx] = true;
-  var tmp = game[3 + (size+1)*idx];
-  game[3 + (size+1)*idx] = game[2 + (size+1)*idx];
-  game[2 + (size+1)*idx] = game[1 + (size+1)*idx];
-  game[1 + (size+1)*idx] = game[0 + (size+1)*idx];
+  var tmp = game[size + (size+1)*idx];
+  for (var i = size;i > 0;i--){
+    game[i + (size+1)*idx] = game[i - 1 + (size+1)*idx];
+  }
   game[0 + (size+1)*idx] = tmp;
 }
 
@@ -128,22 +128,10 @@ function unshift_y(idx){
   }
   push_stat_y[idx] = false;
   var tmp = game[(size+1)*idx];
-  game[0 + (size+1)*idx] = game[1 + (size+1)*idx];
-  game[1 + (size+1)*idx] = game[2 + (size+1)*idx];
-  game[2 + (size+1)*idx] = game[3 + (size+1)*idx];
-  game[3 + (size+1)*idx] = tmp;
-}
-
-function unshift_x(idx){
-  if(!push_stat_x[idx]){
-    return;
+  for (var i=0;i<size;i++){
+    game[i + (size+1)*idx] = game[i + 1 + (size+1)*idx];
   }
-  push_stat_x[idx] = false;
-  var tmp = game[idx + (size+1)*0];
-  game[idx + (size+1)*0] = game[idx + (size+1)*1];
-  game[idx + (size+1)*1] = game[idx + (size+1)*2];
-  game[idx + (size+1)*2] = game[idx + (size+1)*3];
-  game[idx + (size+1)*3] = tmp;
+  game[size	 + (size+1)*idx] = tmp;
 }
 
 function shift_x(idx){
@@ -151,10 +139,22 @@ function shift_x(idx){
     return;
   }
   push_stat_x[idx] = true;
-  var tmp = game[idx + (size+1)*3];
-  game[idx + (size+1)*3] = game[idx + (size+1)*2];
-  game[idx + (size+1)*2] = game[idx + (size+1)*1];
-  game[idx + (size+1)*1] = game[idx + (size+1)*0];
+  var tmp = game[idx + (size+1)*0];
+  for (var i = 0;i < size;i ++){
+    game[idx + (size+1)*i] = game[idx + (size+1)*(i+1)];
+  }
+  game[idx + (size+1)*size] = tmp;
+}
+
+function unshift_x(idx){
+  if(!push_stat_x[idx]){
+    return;
+  }
+  push_stat_x[idx] = false;
+  var tmp = game[idx + (size+1)*size];
+  for(var i = size;i > 0; i--){
+    game[idx + (size+1)*i] = game[idx + (size+1)*(i-1)];
+  }
   game[idx + (size+1)*0] = tmp;
 }
 
@@ -162,14 +162,12 @@ function update(){
   var t = document.getElementById("game");
   for (i = 0; i < size + 2; i++){
     for (j = 0; j < size + 2; j++){
-      if (i > 0 && j > 0){
-        var num = game[(i-1) * (size+1) + (j-1)];
+      if (i < size+1 && j > 0){
+        var num = game[(i) * (size+1) + (j-1)];
         if (num >= 0){
-          t.rows[i].cells[j].innerHTML = num.toString();
-          t.rows[i].cells[j].style.backgroundColor = "#88F";
+          t.rows[i].cells[j].innerHTML = num.toString(); t.rows[i].cells[j].style.color = "#003"; t.rows[i].cells[j].style.backgroundColor = "#88F";
         }else{
-          t.rows[i].cells[j].innerHTML = "";
-          t.rows[i].cells[j].style.backgroundColor = "#FFF";
+          t.rows[i].cells[j].innerHTML = "o"; t.rows[i].cells[j].style.color = "#FFF"; t.rows[i].cells[j].style.backgroundColor = "#FFF";
         }
       }else{
         //t.rows[i].cells[j].innerHTML = "";
@@ -187,7 +185,8 @@ function resizeCanvas(){
   sreen.style.width = min_len + 'px';
   sreen.style.height = min_len + 'px';
   scl = min_len / 1024.0;
-  //draw();
+  //
+  update();
 }
 
 </script> 
