@@ -65,7 +65,13 @@ function setup(){
           }else{
             unshift_x(num);
           }
-          };
+          var sc =document.getElementById("row0");
+          var all = false;
+          for (var k in push_stat_x){
+            all |= push_stat_x[k];
+          }
+          sc.disabled = all;
+        };
         cell.appendChild(checkbox);
         cell.style.backgroundColor = "#FFF";
       }
@@ -84,7 +90,13 @@ function setup(){
           }else{
             unshift_y(num);
           }
-          };
+          var sc =document.getElementById("col0");
+          var all = false;
+          for (var k in push_stat_y){
+            all |= push_stat_y[k];
+          }
+          sc.disabled = all;
+        };
         cell.appendChild(checkbox);
         cell.style.backgroundColor = "#FFF";
       }
@@ -145,7 +157,7 @@ function shift_x(idx){
   game[idx + (size+1)*1] = game[idx + (size+1)*0];
   game[idx + (size+1)*0] = tmp;
 }
-0
+
 function update(){
   var t = document.getElementById("game");
   for (i = 0; i < size + 2; i++){
